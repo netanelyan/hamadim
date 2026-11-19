@@ -9,8 +9,10 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23e3261b'/%3E%3Ctext x='32' y='47' font-size='42' font-weight='900' font-family='Arial,sans-serif' text-anchor='middle' fill='%23fff'%3E%D7%94%3C/text%3E%3C/svg%3E">
 <!--
   Before going live:
-  1. WhatsApp: replace 972XXXXXXXXXX with the real number (4 links).
-  2. Instagram: replace XXXXXXXX with the real handle (2 links).
+  1. WhatsApp: find-and-replace 972XXXXXXXXXX with the real number (every
+     WhatsApp link uses it; the quote builder reads it from its own link).
+  2. Instagram: replace XXXXXXXX with the real handle (2 links + the handle
+     shown on the footer card).
   3. Prices: replace every ₪XXX in the pricing table.
   4. Anything with a dashed yellow outline (class="todo") is a missing fact.
   5. Photos: put files in an images/ folder next to this file, using the
@@ -28,7 +30,7 @@
     --accent: #e3261b;
     --accent-hover: #c41d13;
     --accent-text: #ff5a4e; /* lighter red, readable as small text on dark */
-    --radius: 8px;
+    --radius: 12px;
     --gutter: 20px;
     --max: 1160px;
     color-scheme: dark;
@@ -81,11 +83,13 @@
     border: 2px solid transparent; border-radius: var(--radius);
     background: var(--accent); color: #fff;
     font-size: 1.125rem; font-weight: 700; line-height: 1.2; text-decoration: none;
+    box-shadow: 0 10px 24px -10px rgba(227, 38, 27, .55);
+    transition: background-color .2s ease, transform .2s ease, box-shadow .2s ease;
   }
-  .btn:hover { background: var(--accent-hover); }
+  .btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgba(227, 38, 27, .65); }
   .btn svg { width: 24px; height: 24px; flex: none; }
-  .btn--ghost { background: transparent; border-color: #3a3a40; }
-  .btn--ghost:hover { background: var(--surface); }
+  .btn--ghost { background: transparent; border-color: #3a3a40; box-shadow: none; }
+  .btn--ghost:hover { background: var(--surface); box-shadow: none; }
 
   /* Image placeholders: striped box with a label, covered by the <img> once the file exists */
   .ph {
@@ -121,28 +125,52 @@
     background: var(--accent);
   }
   .hero .lead { max-width: 22ch; margin-top: 20px; font-size: clamp(1.3rem, 5vw, 1.9rem); font-weight: 700; line-height: 1.3; }
+  .hero-facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+  .hero-facts li {
+    padding: 7px 14px; border-radius: 999px;
+    background: rgba(20, 20, 22, .6); border: 1px solid rgba(255, 255, 255, .14);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-size: .95rem; font-weight: 700; line-height: 1.3;
+  }
+  .hero-facts b { color: var(--accent-text); }
   .hero .btn { width: 100%; margin-top: 28px; }
 
   /* 2. Products */
   .products { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  .product { overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .product {
+    overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .product .ph > img { transition: transform .6s ease; }
+  @media (hover: hover) {
+    .product:hover { transform: translateY(-3px); border-color: #3a3a40; box-shadow: 0 22px 44px -22px rgba(0, 0, 0, .8); }
+    .product:hover .ph > img { transform: scale(1.04); }
+  }
   .product .ph { aspect-ratio: 4 / 3; }
   .product--featured .ph { aspect-ratio: 4 / 5; }
   .product-body { padding: 18px 20px 22px; }
   .product h3 { font-size: 1.375rem; }
   .product p { margin-top: 6px; color: var(--muted); }
 
-  /* 3. Steps */
-  .steps { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+  /* 3. Steps: a tracker. Each step draws the line to the next one, so it fits any text length. */
+  .steps { display: grid; margin: 0; padding: 0; list-style: none; }
   .step {
-    display: grid; grid-template-columns: auto 1fr; gap: 2px 18px; align-items: start;
-    padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    position: relative;
+    display: grid; grid-template-columns: 56px 1fr; gap: 2px 18px; align-items: start;
+    padding-bottom: 32px;
+  }
+  .step:last-child { padding-bottom: 0; }
+  .step:not(:last-child)::after {
+    content: ""; position: absolute; inset-inline-start: 27px; top: 64px; bottom: 8px;
+    width: 2px; border-radius: 2px; background: linear-gradient(var(--accent), #3a3a40);
   }
   .step-icon {
     grid-row: span 3; display: grid; place-items: center; width: 56px; height: 56px;
-    color: var(--accent-text); background: rgba(227, 38, 27, .12); border-radius: var(--radius);
+    color: var(--accent-text); background: var(--surface); border: 2px solid var(--line); border-radius: 50%;
+    box-shadow: 0 8px 20px -8px rgba(0, 0, 0, .7);
   }
-  .step-icon svg { width: 28px; height: 28px; }
+  .step:last-child .step-icon { color: #fff; background: var(--accent); border-color: var(--accent); }
+  .step-icon svg { width: 26px; height: 26px; }
   .step-icon .flip { transform: scaleX(-1); } /* truck drives toward the reading direction */
   .step-num { color: var(--accent-text); font-size: .875rem; font-weight: 700; }
   .step h3 { font-size: 1.3rem; }
@@ -168,12 +196,44 @@
     content: ""; position: absolute; inset-inline-start: 0; top: .78em;
     width: 10px; height: 2px; background: var(--accent);
   }
-  .price-ask { margin-top: 28px; font-size: 1.125rem; }
-  .pricing-side .btn { width: 100%; margin-top: 16px; }
+  /* Quote builder: quantities become a ready WhatsApp message */
+  .quote {
+    margin-top: 28px; padding: 22px 20px;
+    background: linear-gradient(180deg, rgba(227, 38, 27, .09), var(--surface) 45%);
+    border: 1px solid var(--line); border-radius: var(--radius);
+  }
+  .quote h3 { font-size: 1.375rem; }
+  .quote-sub { margin-top: 6px; color: var(--muted); }
+  .quote-club { display: grid; gap: 6px; margin-top: 18px; font-size: .95rem; font-weight: 700; }
+  .quote input {
+    min-height: 48px; padding: 0 14px;
+    color: var(--text); background: var(--bg); border: 1px solid #3a3a40; border-radius: 10px;
+    font: inherit; font-size: 1rem; font-weight: 400;
+  }
+  .quote input:focus-visible { outline-offset: 0; border-color: var(--accent-text); }
+  .quote-items { margin: 14px 0 0; padding: 0; list-style: none; }
+  .quote-items li {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding-block: 10px; border-bottom: 1px solid var(--line); font-weight: 700;
+  }
+  .stepper { display: inline-flex; align-items: center; gap: 4px; direction: ltr; flex: none; }
+  .stepper button {
+    display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+    color: var(--text); background: #232327; border: 1px solid #3a3a40; border-radius: 10px;
+    font: inherit; font-size: 1.375rem; line-height: 1; cursor: pointer;
+  }
+  .stepper button:hover { border-color: var(--accent-text); }
+  .quote .stepper input { width: 58px; min-height: 44px; padding: 0 4px; text-align: center; font-weight: 700; -moz-appearance: textfield; appearance: textfield; }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .quote-total { margin-top: 14px; font-weight: 700; }
+  .quote-total output { color: var(--accent-text); }
+  .quote-hint { margin-top: 4px; color: var(--muted); font-size: .95rem; }
+  .quote-hint[hidden] { display: none; }
+  .quote .btn { width: 100%; margin-top: 16px; }
 
   /* 5. Gallery */
   .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .gallery .ph { aspect-ratio: 1; border-radius: 4px; }
+  .gallery .ph { aspect-ratio: 1; border-radius: 8px; }
   .gallery .ph:first-child, .gallery .ph:last-child { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
   .text-link {
     display: inline-flex; align-items: center; gap: 8px; margin-top: 24px;
@@ -189,8 +249,40 @@
   .site-footer { padding-block: clamp(64px, 12vw, 112px) 32px; background: var(--bg-2); border-top: 1px solid var(--line); }
   .footer-cta { margin-bottom: 0; }
   .footer-cta h2 { max-width: 14ch; font-size: clamp(2rem, 8vw, 3.5rem); }
-  .footer-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-  .footer-actions .btn { flex: 1 1 100%; }
+  /* Contact cards: WhatsApp with quick topics, Instagram beside it */
+  .contact { display: grid; gap: 16px; margin-top: clamp(28px, 5vw, 40px); }
+  .contact-card {
+    display: flex; flex-direction: column; padding: 22px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  }
+  .contact-card--wa { background: linear-gradient(180deg, rgba(227, 38, 27, .1), var(--surface) 55%); }
+  .contact-who { display: flex; align-items: center; gap: 12px; }
+  .contact-av {
+    display: grid; place-items: center; flex: none; width: 52px; height: 52px;
+    color: #fff; background: var(--accent); border-radius: 14px;
+    font-size: 1.75rem; font-weight: 700; line-height: 1;
+  }
+  .contact-card--ig .contact-av { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px #d62976; }
+  .contact-name { display: block; font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
+  .contact-handle { display: block; color: var(--muted); font-size: .9rem; direction: ltr; unicode-bidi: isolate; text-align: start; }
+  .chat-msg {
+    align-self: flex-start; max-width: 88%; margin-top: 18px; padding: 10px 14px;
+    background: #232327; border: 1px solid #2f2f35; border-radius: 16px 4px 16px 16px; /* tail on the right, like a received message in RTL */
+    line-height: 1.5;
+  }
+  .chat-ask { margin-top: 16px; color: var(--muted); font-size: .9rem; font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+    border: 1.5px solid #3a3a40; border-radius: 999px;
+    font-weight: 700; text-decoration: none;
+    transition: background-color .2s ease, border-color .2s ease;
+  }
+  .chip:hover { background: rgba(227, 38, 27, .1); border-color: var(--accent-text); }
+  .contact-card--wa .btn { width: 100%; margin-top: 22px; }
+  .contact-text { margin-top: 14px; color: var(--muted); }
+  .contact-card--ig .btn { margin-top: auto; }
+  .contact-card--ig .contact-text { margin-bottom: 20px; }
   .footer-bottom { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
 
   /* Floating WhatsApp button, mobile only. Sits on the left, the ragged edge of RTL text. */
@@ -209,8 +301,7 @@
   .fab.is-hidden { display: none; }
 
   @media (min-width: 600px) {
-    .hero .btn, .pricing-side .btn { width: auto; }
-    .footer-actions .btn { flex: 0 0 auto; }
+    .hero .btn { width: auto; }
   }
 
   @media (min-width: 720px) {
@@ -224,9 +315,14 @@
   }
 
   @media (min-width: 860px) {
-    .steps { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .step { grid-template-columns: 1fr; padding: 32px; }
+    .steps { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .step { grid-template-columns: 1fr; padding-bottom: 0; }
     .step-icon { grid-row: auto; margin-bottom: 18px; }
+    /* Horizontal line from this dot to the next column's dot (RTL: the next step is to the left). */
+    .step:not(:last-child)::after {
+      inset-inline-start: 68px; inset-inline-end: -20px; top: 27px; bottom: auto;
+      width: auto; height: 2px; background: linear-gradient(to left, var(--accent), #3a3a40);
+    }
 
     .gallery { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 250px; gap: 12px; }
     .gallery .ph, .gallery .ph:first-child, .gallery .ph:last-child { grid-column: auto; aspect-ratio: auto; }
@@ -237,8 +333,13 @@
 
   @media (min-width: 900px) {
     .pricing { grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: start; }
-    .price-ask { margin-top: 32px; }
+    .contact { grid-template-columns: 1.4fr 1fr; }
     .fab { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+    .btn:hover, .product:hover, .product:hover .ph > img { transform: none; }
   }
 </style>
 </head>
@@ -258,6 +359,11 @@
     <p class="eyebrow">למועדוני MMA, קיקבוקס ולחימה</p>
     <h1>המדים</h1>
     <p class="lead">מדים מותאמים אישית למועדון שלך</p>
+    <ul class="hero-facts">
+      <li>מזמינים כבר מ-<b dir="ltr">10</b> יחידות</li>
+      <li>העיצוב כלול במחיר</li>
+      <li><b dir="ltr">3-4</b> שבועות מאישור העיצוב</li>
+    </ul>
     <a class="btn" data-cta href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%9C%20%D7%9E%D7%93%D7%99%D7%9D%20%D7%9C%D7%9E%D7%95%D7%A2%D7%93%D7%95%D7%9F" target="_blank" rel="noopener">
       <svg aria-hidden="true"><use href="#i-wa"/></svg>
       דברו איתנו בוואטסאפ
@@ -399,11 +505,54 @@
             <li>העיצוב כלול במחיר.</li>
             <li>משלוח כלול בהזמנות של <span class="todo">[כמות]</span> יחידות ומעלה.</li>
           </ul>
-          <p class="price-ask">רוצים מחיר להזמנה שלכם? שלחו לנו מה צריך ובאיזו כמות.</p>
-          <a class="btn" data-cta href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%9C%20%D7%9E%D7%93%D7%99%D7%9D%20%D7%9C%D7%9E%D7%95%D7%A2%D7%93%D7%95%D7%9F" target="_blank" rel="noopener">
-            <svg aria-hidden="true"><use href="#i-wa"/></svg>
-            הצעת מחיר בוואטסאפ
-          </a>
+          <div class="quote" id="quote">
+            <h3>רוצים מחיר להזמנה שלכם?</h3>
+            <p class="quote-sub">ממלאים כמה צריך מכל פריט, וההודעה לוואטסאפ נכתבת לבד.</p>
+            <label class="quote-club">
+              שם המועדון
+              <input type="text" data-club autocomplete="organization" placeholder="לא חובה">
+            </label>
+            <ul class="quote-items">
+              <li>
+                <span>סט ראשגארד + שורט</span>
+                <span class="stepper">
+                  <button type="button" data-step="-1" aria-label="פחות סטים">−</button>
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="סט ראשגארד + שורט" aria-label="כמות סטים של ראשגארד ושורט">
+                  <button type="button" data-step="1" aria-label="עוד סט">+</button>
+                </span>
+              </li>
+              <li>
+                <span>חולצות</span>
+                <span class="stepper">
+                  <button type="button" data-step="-1" aria-label="פחות חולצות">−</button>
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="חולצות" aria-label="כמות חולצות">
+                  <button type="button" data-step="1" aria-label="עוד חולצה">+</button>
+                </span>
+              </li>
+              <li>
+                <span>שורטים</span>
+                <span class="stepper">
+                  <button type="button" data-step="-1" aria-label="פחות שורטים">−</button>
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="שורטים" aria-label="כמות שורטים">
+                  <button type="button" data-step="1" aria-label="עוד שורט">+</button>
+                </span>
+              </li>
+              <li>
+                <span>כפפות (זוגות)</span>
+                <span class="stepper">
+                  <button type="button" data-step="-1" aria-label="פחות זוגות כפפות">−</button>
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="כפפות (זוגות)" aria-label="כמות זוגות כפפות">
+                  <button type="button" data-step="1" aria-label="עוד זוג כפפות">+</button>
+                </span>
+              </li>
+            </ul>
+            <p class="quote-total">סה״כ יחידות: <output data-total>0</output></p>
+            <p class="quote-hint" data-hint hidden>ההזמנה מתחילה מ-10 יחידות.</p>
+            <a class="btn" data-cta data-quote-send href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8%20%D7%A2%D7%9C%20%D7%9E%D7%93%D7%99%D7%9D%20%D7%9C%D7%9E%D7%95%D7%A2%D7%93%D7%95%D7%9F" target="_blank" rel="noopener">
+              <svg aria-hidden="true"><use href="#i-wa"/></svg>
+              שליחה בוואטסאפ
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -466,15 +615,42 @@
       <h2>שלחו לנו את הלוגו של המועדון</h2>
       <p>ונחזור אליכם בוואטסאפ עם הצעת מחיר.</p>
     </div>
-    <div class="footer-actions">
-      <a class="btn" data-cta href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%9C%20%D7%9E%D7%93%D7%99%D7%9D%20%D7%9C%D7%9E%D7%95%D7%A2%D7%93%D7%95%D7%9F" target="_blank" rel="noopener">
-        <svg aria-hidden="true"><use href="#i-wa"/></svg>
-        דברו איתנו בוואטסאפ
-      </a>
-      <a class="btn btn--ghost" href="https://www.instagram.com/XXXXXXXX" target="_blank" rel="noopener">
-        <svg aria-hidden="true"><use href="#i-ig"/></svg>
-        אינסטגרם
-      </a>
+    <div class="contact">
+      <div class="contact-card contact-card--wa">
+        <div class="contact-who">
+          <span class="contact-av" aria-hidden="true">ה</span>
+          <span>
+            <span class="contact-name">המדים</span>
+            <span class="contact-handle">WhatsApp</span>
+          </span>
+        </div>
+        <p class="chat-msg">היי, אפשר לשלוח לנו כאן לוגו, צבעים וכל שאלה על ההזמנה.</p>
+        <p class="chat-ask" id="chat-ask">על מה תרצו לדבר?</p>
+        <div class="chips" role="group" aria-labelledby="chat-ask">
+          <a class="chip" href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%94%D7%A6%D7%A2%D7%AA%20%D7%9E%D7%97%D7%99%D7%A8%20%D7%A2%D7%9C%20%D7%9E%D7%93%D7%99%D7%9D%20%D7%9C%D7%9E%D7%95%D7%A2%D7%93%D7%95%D7%9F" target="_blank" rel="noopener">הצעת מחיר</a>
+          <a class="chip" href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%A2%D7%9C%20%D7%94%D7%A2%D7%99%D7%A6%D7%95%D7%91%20%D7%A9%D7%9C%20%D7%94%D7%9E%D7%93%D7%99%D7%9D%3A" target="_blank" rel="noopener">שאלה על העיצוב</a>
+          <a class="chip" href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%9C%D7%95%D7%97%D7%95%D7%AA%20%D7%96%D7%9E%D7%A0%D7%99%D7%9D.%20%D7%90%D7%A0%D7%97%D7%A0%D7%95%20%D7%A6%D7%A8%D7%99%D7%9B%D7%99%D7%9D%20%D7%90%D7%AA%20%D7%94%D7%9E%D7%93%D7%99%D7%9D%20%D7%A2%D7%93%3A" target="_blank" rel="noopener">מתי זה יהיה מוכן?</a>
+          <a class="chip" href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%A2%D7%9C%20%D7%9E%D7%99%D7%93%D7%95%D7%AA%3A" target="_blank" rel="noopener">שאלה על מידות</a>
+        </div>
+        <a class="btn" data-cta href="https://wa.me/972XXXXXXXXXX?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%9C%20%D7%9E%D7%93%D7%99%D7%9D%20%D7%9C%D7%9E%D7%95%D7%A2%D7%93%D7%95%D7%9F" target="_blank" rel="noopener">
+          <svg aria-hidden="true"><use href="#i-wa"/></svg>
+          דברו איתנו בוואטסאפ
+        </a>
+      </div>
+      <div class="contact-card contact-card--ig">
+        <div class="contact-who">
+          <span class="contact-av" aria-hidden="true">ה</span>
+          <span>
+            <span class="contact-name">Instagram</span>
+            <span class="contact-handle">@XXXXXXXX</span>
+          </span>
+        </div>
+        <p class="contact-text">עוד תמונות של המדים שלנו, על הלוחמים.</p>
+        <a class="btn btn--ghost" href="https://www.instagram.com/XXXXXXXX" target="_blank" rel="noopener">
+          <svg aria-hidden="true"><use href="#i-ig"/></svg>
+          לאינסטגרם שלנו
+        </a>
+      </div>
     </div>
     <p class="footer-bottom">המדים ©</p>
   </div>
@@ -500,6 +676,51 @@
     update();
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
+  })();
+
+  // Quote builder: turns the quantities into the WhatsApp message on the send button.
+  (function () {
+    var quote = document.getElementById('quote');
+    var link = quote.querySelector('[data-quote-send]');
+    var base = link.href.split('?')[0];
+    var fallback = link.href;
+    var club = quote.querySelector('[data-club]');
+    var items = Array.prototype.slice.call(quote.querySelectorAll('[data-item]'));
+    var total = quote.querySelector('[data-total]');
+    var hint = quote.querySelector('[data-hint]');
+
+    function count(input) {
+      var n = parseInt(input.value, 10);
+      return isNaN(n) || n < 0 ? 0 : Math.min(n, 999);
+    }
+    function update() {
+      var lines = [], sum = 0, name = club.value.trim();
+      items.forEach(function (input) {
+        var n = count(input);
+        sum += n;
+        if (n) lines.push(input.dataset.item + ': ' + n);
+      });
+      total.textContent = sum;
+      hint.hidden = !(sum > 0 && sum < 10);
+      if (!lines.length && !name) { link.href = fallback; return; }
+      var text = 'היי, הגעתי מהאתר ואשמח להצעת מחיר.';
+      if (name) text += '\nמועדון: ' + name;
+      if (lines.length) text += '\n\n' + lines.join('\n');
+      link.href = base + '?text=' + encodeURIComponent(text);
+    }
+
+    quote.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-step]');
+      if (!btn) return;
+      var input = btn.parentNode.querySelector('input');
+      input.value = Math.max(0, Math.min(999, count(input) + Number(btn.dataset.step)));
+      update();
+    });
+    quote.addEventListener('input', update);
+    items.forEach(function (input) {
+      input.addEventListener('blur', function () { input.value = count(input); });
+    });
+    update();
   })();
 </script>
 </body>
