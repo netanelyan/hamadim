@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>העמוד לא נמצא | המדים</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0c0c0d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23e3261b'/%3E%3Ctext x='32' y='47' font-size='42' font-weight='900' font-family='Arial,sans-serif' text-anchor='middle' fill='%23fff'%3E%D7%94%3C/text%3E%3C/svg%3E">
+<!-- GitHub Pages serves this file for any missing path, at any depth, so styles are inline
+     and the home link is set by the script below instead of a relative URL. -->
+<style>
+  :root { --bg: #0c0c0d; --text: #f4f4f5; --muted: #a3a3ab; --accent: #e3261b; --accent-hover: #c41d13; --accent-text: #ff5a4e; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 32px 20px;
+    background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Hebrew", "Arial Hebrew", Arial, sans-serif;
+    font-size: 1.0625rem; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 34rem; }
+  .code { color: var(--accent-text); font-weight: 700; }
+  h1 { margin: 6px 0 0; font-size: clamp(2.25rem, 9vw, 3.5rem); line-height: 1.1; font-weight: 700; }
+  h1::after { content: ""; display: block; width: 1.2em; height: .09em; margin-top: .18em; background: var(--accent); }
+  p { margin: 18px 0 0; color: var(--muted); font-size: 1.125rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 52px; margin-top: 28px; padding: 12px 24px;
+    border-radius: 12px; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  :focus-visible { outline: 3px solid var(--accent-text); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="code" dir="ltr" style="text-align:right;margin:0">404</p>
+  <h1>העמוד הזה לא קיים</h1>
+  <p>אולי הלינק ישן, או שנפלה טעות בכתובת. מהעמוד הראשי אפשר להגיע לכל מה שיש באתר.</p>
+  <a class="btn" id="home" href="/">לעמוד הראשי</a>
+</main>
+<script>
+  // On a GitHub Pages project site the home page is /<repo>/, not /.
+  if (/\.github\.io$/.test(location.hostname)) {
+    document.getElementById('home').href = '/' + location.pathname.split('/')[1] + '/';
+  }
+</script>
+</body>
+</html>
