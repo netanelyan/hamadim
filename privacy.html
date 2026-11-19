@@ -10,9 +10,11 @@
 <link rel="stylesheet" href="pages.css">
 <!--
   Draft. Fill every [placeholder] and have a lawyer review this page before going live.
-  This page describes the site as it is now: no forms that submit data, no cookies,
-  no analytics or ad pixels, hosted on GitHub Pages. If any of that changes
-  (Google Analytics, a Meta pixel, a contact form, another host), update this page.
+  This page describes the site as it is now: the quote builder saves the club name
+  and quantities to a Google Sheet (see backend/), and there are no other forms, no
+  cookies, no analytics or ad pixels, hosted on GitHub Pages. If any of that changes
+  (Google Analytics, a Meta pixel, a contact form, another host, more fields saved
+  to the sheet), update this page.
 -->
 </head>
 <body>
@@ -75,10 +77,11 @@
           <h2 id="collect-t">איזה מידע אנחנו מקבלים</h2>
         </div>
         <ul class="doc-list">
-          <li><strong>באתר עצמו אנחנו לא אוספים פרטים.</strong> אין באתר טופס ששולח אלינו מידע, אין עוגיות (cookies) ואין כלים לסטטיסטיקה או לפרסום.</li>
-          <li>מחשבון הכמויות בעמוד הראשי עובד רק בדפדפן שלכם. מה שממלאים בו נכנס להודעת וואטסאפ רק כשלוחצים "שליחה בוואטסאפ", ואתם רואים את ההודעה לפני שהיא נשלחת.</li>
+          <li><strong>באתר עצמו נשמר אצלנו רק מה שממלאים במחשבון הכמויות.</strong> כשלוחצים "שליחה בוואטסאפ", שם המועדון והכמויות נשמרים בגיליון ההזמנות שלנו, יחד עם התאריך ומספר בקשה. אותו מספר מופיע בהודעת הוואטסאפ, כדי שנדע לחבר בין ההודעה לבקשה.</li>
+          <li>עד שלוחצים על הכפתור, מה שממלאים במחשבון נשאר רק בדפדפן שלכם. את ההודעה עצמה אתם רואים בוואטסאפ לפני שהיא נשלחת.</li>
+          <li>אין באתר עוגיות (cookies) ואין כלים לסטטיסטיקה או לפרסום.</li>
           <li>כשכותבים לנו בוואטסאפ, אנחנו מקבלים את מה ששלחתם: שם, מספר טלפון, שם המועדון, לוגו, צבעים, כמויות ומידות.</li>
-          <li>כדי להוציא חשבונית ולשלוח את המדים, נבקש גם פרטים לחשבונית וכתובת למשלוח.</li>
+          <li>כדי להוציא חשבונית ולשלוח את המדים, נבקש גם את הפרטים לחשבונית, ושם וטלפון למשלוח.</li>
         </ul>
       </section>
 
@@ -101,9 +104,11 @@
           <h2 id="share-t">עם מי אנחנו משתפים</h2>
         </div>
         <ul class="doc-list">
-          <li>המפעל שמייצר את המדים מקבל את העיצוב, הכמויות והמידות, ושמות ומספרים להדפסה אם ביקשתם. <span class="todo">[איפה נמצא המפעל. אם הוא מחוץ לישראל, צריך לכתוב את זה כאן]</span></li>
-          <li>חברת המשלוחים מקבלת שם, טלפון וכתובת למשלוח.</li>
+          <li>המפעל שמייצר את המדים נמצא בסין. הוא מקבל את העיצוב, הכמויות והמידות, ושמות ומספרים להדפסה אם ביקשתם. כלומר, המידע הזה עובר אל מחוץ לישראל.</li>
+          <li>חברת המשלוחים מקבלת שם וטלפון, כדי שתוכלו לאסוף את המדים מנקודת האיסוף.</li>
+          <li>Morning, התוכנה שבה אנחנו מוציאים חשבוניות, מקבלת את הפרטים לחשבונית.</li>
           <li>רואה החשבון שלנו מקבל את פרטי החשבוניות.</li>
+          <li>גיליון ההזמנות שלנו שמור ב-Google Sheets, בחשבון Google של העסק.</li>
           <li>וואטסאפ ואינסטגרם הם שירותים של Meta. מה שנשלח דרכם מטופל גם לפי מדיניות הפרטיות של Meta.</li>
           <li>האתר מאוחסן ב-GitHub Pages. GitHub יכולה לשמור את כתובת ה-IP של מי שנכנס לאתר, לצורכי אבטחה.</li>
         </ul>
@@ -115,9 +120,9 @@
           <h2 id="keep-t">כמה זמן שומרים</h2>
         </div>
         <ul class="doc-list">
-          <li>את פרטי ההזמנה והעיצוב אנחנו שומרים <span class="todo">[כמה זמן]</span> אחרי שההזמנה נסגרה, כדי שיהיה קל להזמין שוב באותו עיצוב.</li>
+          <li>את פרטי ההזמנה והעיצוב אנחנו שומרים לפחות 6 חודשים אחרי שההזמנה נסגרה, כדי שיהיה קל להזמין שוב באותו עיצוב.</li>
           <li>חשבוניות ומסמכים שהחוק מחייב לשמור נשמרים לתקופה שהחוק קובע.</li>
-          <li>המידע נשמר ב<span class="todo">[איפה: וואטסאפ, Google Drive, תוכנת הנהלת חשבונות]</span>, ורק אנחנו נכנסים אליו.</li>
+          <li>המידע נשמר בגיליון ההזמנות שלנו ב-Google Sheets, בוואטסאפ וב-Morning, ורק אנחנו נכנסים אליו.</li>
         </ul>
       </section>
 

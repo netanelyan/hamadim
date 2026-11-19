@@ -13,13 +13,15 @@
      .html file (the quote builder reads it from its own link).
   2. Instagram: replace XXXXXXXX with the real handle (2 links + the handle
      shown on the footer card).
-  3. Prices: replace every ₪XXX in the pricing table.
+  3. Prices: the set is ₪200. Replace the other ₪XXX in the pricing table.
   4. Anything with a dashed yellow outline (class="todo") is a missing fact.
   5. Photos: put files in an images/ folder next to this file, using the
      names shown on each placeholder (images/hero.jpg, images/set.jpg, ...).
      A missing image falls back to the striped placeholder automatically.
   6. Inner pages (faq, returns, terms, privacy, accessibility): fill every
      [placeholder] there too, and have a lawyer review the legal pages.
+  7. Orders sheet: follow backend/README.md, then paste the web app URL into
+     data-orders-endpoint on #quote. Until then the quote builder only opens WhatsApp.
 -->
 <style>
   :root {
@@ -232,6 +234,9 @@
   .quote-hint { margin-top: 4px; color: var(--muted); font-size: .95rem; }
   .quote-hint[hidden] { display: none; }
   .quote .btn { width: 100%; margin-top: 16px; }
+  .quote-note { margin-top: 10px; color: var(--muted); font-size: .875rem; }
+  .quote-note[hidden] { display: none; }
+  .quote-note a { color: var(--text); }
 
   /* 5. Gallery */
   .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -491,8 +496,8 @@
             <tbody>
               <tr>
                 <th scope="row">סט ראשגארד + שורט</th>
-                <td><span class="price" dir="ltr">₪XXX</span></td>
-                <td class="col-best"><span class="price" dir="ltr">₪XXX</span></td>
+                <td><span class="price" dir="ltr">₪200</span></td>
+                <td class="col-best"><span class="price" dir="ltr">₪200</span></td>
               </tr>
               <tr>
                 <th scope="row">חולצה</th>
@@ -516,9 +521,9 @@
           <ul class="price-notes">
             <li>המחירים לא כוללים מע״מ.</li>
             <li>העיצוב כלול במחיר.</li>
-            <li>משלוח כלול בהזמנות של <span class="todo">[כמות]</span> יחידות ומעלה.</li>
+            <li>המשלוח לנקודת איסוף כלול בכל הזמנה.</li>
           </ul>
-          <div class="quote" id="quote">
+          <div class="quote" id="quote" data-orders-endpoint="">
             <h3>רוצים מחיר להזמנה שלכם?</h3>
             <p class="quote-sub">ממלאים כמה צריך מכל פריט, וההודעה לוואטסאפ נכתבת לבד.</p>
             <label class="quote-club">
@@ -530,7 +535,7 @@
                 <span>סט ראשגארד + שורט</span>
                 <span class="stepper">
                   <button type="button" data-step="-1" aria-label="פחות סטים">−</button>
-                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="סט ראשגארד + שורט" aria-label="כמות סטים של ראשגארד ושורט">
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="סט ראשגארד + שורט" data-key="set" aria-label="כמות סטים של ראשגארד ושורט">
                   <button type="button" data-step="1" aria-label="עוד סט">+</button>
                 </span>
               </li>
@@ -538,7 +543,7 @@
                 <span>חולצות</span>
                 <span class="stepper">
                   <button type="button" data-step="-1" aria-label="פחות חולצות">−</button>
-                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="חולצות" aria-label="כמות חולצות">
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="חולצות" data-key="shirts" aria-label="כמות חולצות">
                   <button type="button" data-step="1" aria-label="עוד חולצה">+</button>
                 </span>
               </li>
@@ -546,7 +551,7 @@
                 <span>שורטים</span>
                 <span class="stepper">
                   <button type="button" data-step="-1" aria-label="פחות שורטים">−</button>
-                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="שורטים" aria-label="כמות שורטים">
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="שורטים" data-key="shorts" aria-label="כמות שורטים">
                   <button type="button" data-step="1" aria-label="עוד שורט">+</button>
                 </span>
               </li>
@@ -554,7 +559,7 @@
                 <span>כפפות (זוגות)</span>
                 <span class="stepper">
                   <button type="button" data-step="-1" aria-label="פחות זוגות כפפות">−</button>
-                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="כפפות (זוגות)" aria-label="כמות זוגות כפפות">
+                  <input type="number" inputmode="numeric" min="0" max="999" value="0" data-item="כפפות (זוגות)" data-key="gloves" aria-label="כמות זוגות כפפות">
                   <button type="button" data-step="1" aria-label="עוד זוג כפפות">+</button>
                 </span>
               </li>
@@ -565,6 +570,7 @@
               <svg aria-hidden="true"><use href="#i-wa"/></svg>
               שליחה בוואטסאפ
             </a>
+            <p class="quote-note" data-save-note hidden>כששולחים, שם המועדון והכמויות נשמרים גם בגיליון ההזמנות שלנו. <a href="privacy.html#collect">מה קורה עם המידע</a></p>
           </div>
         </div>
       </div>
@@ -614,7 +620,7 @@
       <div class="about-text">
         <p>אנחנו מכינים מדים וציוד מותאמים אישית למועדוני MMA, קיקבוקס ולחימה בישראל. העיצוב כלול במחיר, אז לא צריך מעצב משלכם. מספיק לשלוח לוגו וצבעים.</p>
         <p>אפשר להזמין כבר מ-10 יחידות, כך שגם מועדון קטן יכול להלביש קבוצה שלמה. מדברים איתנו ישירות בוואטסאפ, בעברית, מההודעה הראשונה ועד שהמדים מגיעים.</p>
-        <p>בחרנו בדים שמחזיקים אימונים יומיים והרבה כביסות. <span class="todo">[פרט אמיתי על החומרים: סוג הבד ושיטת ההדפסה]</span></p>
+        <p>בחרנו בדים שמחזיקים אימונים יומיים והרבה כביסות, וסוג הבד שונה מפריט לפריט. רוצים לדעת ממה עשוי פריט מסוים? שאלו אותנו בוואטסאפ.</p>
       </div>
     </div>
   </section>
@@ -701,8 +707,11 @@
   })();
 
   // Quote builder: turns the quantities into the WhatsApp message on the send button.
+  // If data-orders-endpoint is set (see backend/README.md), sending also saves the request
+  // to the orders sheet, under a request number that goes into the message too.
   (function () {
     var quote = document.getElementById('quote');
+    var endpoint = quote.dataset.ordersEndpoint;
     var link = quote.querySelector('[data-quote-send]');
     var base = link.href.split('?')[0];
     var fallback = link.href;
@@ -710,26 +719,68 @@
     var items = Array.prototype.slice.call(quote.querySelectorAll('[data-item]'));
     var total = quote.querySelector('[data-total]');
     var hint = quote.querySelector('[data-hint]');
+    var lastSent = null, lastRef = null;
+
+    if (endpoint) quote.querySelector('[data-save-note]').hidden = false;
 
     function count(input) {
       var n = parseInt(input.value, 10);
       return isNaN(n) || n < 0 ? 0 : Math.min(n, 999);
     }
-    function update() {
-      var lines = [], sum = 0, name = club.value.trim();
+    function state() {
+      var counts = {}, sum = 0;
       items.forEach(function (input) {
         var n = count(input);
+        counts[input.dataset.key] = n;
         sum += n;
+      });
+      return { club: club.value.trim(), items: counts, sum: sum };
+    }
+    function message(s, ref) {
+      var lines = [];
+      items.forEach(function (input) {
+        var n = s.items[input.dataset.key];
         if (n) lines.push(input.dataset.item + ': ' + n);
       });
-      total.textContent = sum;
-      hint.hidden = !(sum > 0 && sum < 10);
-      if (!lines.length && !name) { link.href = fallback; return; }
       var text = 'היי, הגעתי מהאתר ואשמח להצעת מחיר.';
-      if (name) text += '\nמועדון: ' + name;
+      if (s.club) text += '\nמועדון: ' + s.club;
       if (lines.length) text += '\n\n' + lines.join('\n');
-      link.href = base + '?text=' + encodeURIComponent(text);
+      if (ref) text += '\n\nמספר בקשה: ' + ref;
+      return base + '?text=' + encodeURIComponent(text);
     }
+    // e.g. 261119-K7P: the date, then 3 characters that are easy to read aloud.
+    function newRef() {
+      var d = new Date(), chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', code = '';
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      for (var i = 0; i < 3; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+      return String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + code;
+    }
+    function update() {
+      var s = state();
+      total.textContent = s.sum;
+      hint.hidden = !(s.sum > 0 && s.sum < 10);
+      link.href = s.sum || s.club ? message(s) : fallback;
+    }
+
+    // Runs before the browser follows the link, so the new href is the one that opens.
+    link.addEventListener('click', function () {
+      var s = state();
+      if (!endpoint || !s.sum) return;
+      var key = JSON.stringify(s);
+      if (key !== lastSent) {
+        lastSent = key;
+        lastRef = newRef();
+        // text/plain keeps this a simple request, which Apps Script accepts without CORS.
+        fetch(endpoint, {
+          method: 'POST',
+          mode: 'no-cors',
+          keepalive: true,
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ ref: lastRef, club: s.club, items: s.items })
+        }).catch(function () {});
+      }
+      link.href = message(s, lastRef);
+    });
 
     quote.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-step]');
